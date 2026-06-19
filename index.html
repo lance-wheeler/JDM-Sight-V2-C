@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REDLINE — A JDM Reverence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --base:#0A0A0C;
+  --panel:#101015;
+  --ink:#EDEDED;
+  --muted:#7A7A82;
+  --redline:#FF1E2D;
+  --amber:#FFB627;
+  --cyan:#3DD6D0;
+  --line:rgba(255,255,255,0.08);
+  --display:'Oswald',sans-serif;
+  --body:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--base);
+  color:var(--ink);
+  font-family:var(--body);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--redline);color:#fff}
+
+/* ---- progress redline rail ---- */
+.rail{
+  position:fixed;top:0;right:0;width:3px;height:100vh;
+  background:linear-gradient(to bottom,transparent,var(--line) 10%,var(--line) 90%,transparent);
+  z-index:90;
+}
+.rail-fill{
+  position:absolute;top:0;left:0;width:100%;height:0%;
+  background:linear-gradient(to bottom,var(--cyan),var(--amber) 70%,var(--redline));
+  transition:height .1s linear;
+  box-shadow:0 0 12px var(--redline);
+}
+.rail-rpm{
+  position:fixed;right:18px;z-index:91;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--muted);writing-mode:vertical-rl;
+  top:50%;transform:translateY(-50%);
+}
+
+/* ---- nav ---- */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px 44px;
+  mix-blend-mode:difference;
+}
+.brand{
+  font-family:var(--display);font-weight:700;font-size:20px;
+  letter-spacing:.32em;text-transform:uppercase;color:#fff;
+}
+.brand span{color:var(--redline)}
+.navlinks{display:flex;gap:30px;list-style:none}
+.navlinks a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:#fff;text-decoration:none;opacity:.7;
+  transition:opacity .2s;
+}
+.navlinks a:hover{opacity:1}
+
+/* ---- hero ---- */
+.hero{
+  min-height:100vh;position:relative;display:grid;
+  grid-template-columns:1.1fr .9fr;align-items:center;
+  padding:0 44px;gap:30px;
+  border-bottom:1px solid var(--line);
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 50%,rgba(255,30,45,0.10),transparent 60%),
+    radial-gradient(ellipse 60% 50% at 20% 80%,rgba(61,214,208,0.06),transparent 60%);
+  pointer-events:none;
+}
+.scanlines{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;
+  background:repeating-linear-gradient(to bottom,transparent 0 2px,rgba(0,0,0,0.18) 2px 4px);
+}
+.hero-copy{position:relative;z-index:3}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:26px;
+  display:flex;align-items:center;gap:14px;
+}
+.eyebrow::before{content:"";width:42px;height:1px;background:var(--cyan)}
+h1{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(56px,9vw,140px);line-height:.86;
+  letter-spacing:-.01em;text-transform:uppercase;
+}
+h1 .stroke{
+  -webkit-text-stroke:1.5px var(--ink);
+  color:transparent;display:block;
+}
+h1 .fill{color:var(--ink);display:block}
+h1 em{color:var(--redline);font-style:normal}
+.hero-sub{
+  font-size:17px;line-height:1.6;color:var(--muted);
+  max-width:440px;margin:32px 0 40px;font-weight:300;
+}
+.hero-sub strong{color:var(--ink);font-weight:500}
+.cta-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.btn{
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;padding:16px 30px;text-decoration:none;
+  border:1px solid var(--redline);color:#fff;background:var(--redline);
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.btn:hover{background:transparent;color:var(--redline)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ---- tachometer ---- */
+.tach-wrap{position:relative;z-index:3;display:flex;justify-content:center;align-items:center}
+.tach{width:100%;max-width:480px;filter:drop-shadow(0 0 30px rgba(255,30,45,0.15))}
+.tach-readout{
+  position:absolute;text-align:center;
+  font-family:var(--mono);
+}
+.tach-rpm{font-size:54px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em}
+.tach-rpm .x{font-size:18px;color:var(--muted);margin-left:4px}
+.tach-label{font-size:11px;letter-spacing:.3em;color:var(--cyan);margin-top:8px;text-transform:uppercase}
+
+/* ---- marquee ---- */
+.marquee{
+  border-bottom:1px solid var(--line);overflow:hidden;
+  padding:20px 0;background:var(--panel);
+}
+.marquee-track{
+  display:flex;gap:0;white-space:nowrap;
+  animation:scroll 32s linear infinite;
+}
+.marquee-track span{
+  font-family:var(--display);font-weight:600;font-size:24px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+  padding:0 30px;display:flex;align-items:center;gap:30px;
+}
+.marquee-track span::after{content:"●";color:var(--redline);font-size:10px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---- section frame ---- */
+section{padding:120px 44px;position:relative;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:70px}
+.sec-num{
+  font-family:var(--mono);font-size:13px;color:var(--redline);
+  letter-spacing:.1em;font-weight:700;
+}
+.sec-num small{color:var(--muted);font-weight:400}
+.sec-title{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(32px,5vw,64px);text-transform:uppercase;
+  letter-spacing:-.01em;line-height:1;
+}
+.sec-title em{color:var(--redline);font-style:normal}
+
+/* ---- legends grid ---- */
+.legends{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.legend{
+  background:var(--base);padding:38px 32px;position:relative;
+  transition:background .3s;cursor:default;min-height:340px;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.legend:hover{background:var(--panel)}
+.legend-spark{
+  position:absolute;top:0;left:0;width:100%;height:3px;
+  background:var(--carcolor,var(--redline));transform:scaleX(0);
+  transform-origin:left;transition:transform .4s ease;
+}
+.legend:hover .legend-spark{transform:scaleX(1)}
+.legend-chassis{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--carcolor,var(--redline));margin-bottom:auto;
+}
+.legend-year{font-family:var(--mono);font-size:11px;color:var(--muted);float:right}
+.legend-name{
+  font-family:var(--display);font-weight:600;font-size:30px;
+  text-transform:uppercase;line-height:.95;margin:18px 0 6px;
+}
+.legend-maker{font-size:13px;color:var(--muted);margin-bottom:24px;font-weight:300}
+.legend-engine{
+  font-family:var(--mono);font-size:12px;color:var(--ink);
+  padding:14px 0;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;
+}
+.legend-engine span:last-child{color:var(--cyan)}
+.legend-note{font-size:13px;line-height:1.55;color:var(--muted);font-weight:300;margin-top:14px}
+
+/* ---- spec / philosophy split ---- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.philtext p{font-size:18px;line-height:1.7;color:var(--muted);font-weight:300;margin-bottom:24px}
+.philtext p strong{color:var(--ink);font-weight:500}
+.philtext .lead{font-size:24px;color:var(--ink);font-weight:300;line-height:1.5}
+.philtext .lead em{color:var(--redline);font-style:normal}
+.specsheet{
+  background:var(--panel);border:1px solid var(--line);padding:0;
+  font-family:var(--mono);
+}
+.specsheet-head{
+  padding:18px 26px;border-bottom:1px solid var(--line);
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);
+  display:flex;justify-content:space-between;
+}
+.specrow{
+  display:flex;justify-content:space-between;padding:16px 26px;
+  border-bottom:1px solid var(--line);font-size:13px;
+}
+.specrow:last-child{border-bottom:none}
+.specrow .k{color:var(--muted)}
+.specrow .v{color:var(--ink);font-weight:500}
+.specrow .v em{color:var(--amber);font-style:normal}
+
+/* ---- tuners ---- */
+.tuners{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.tuner{
+  border:1px solid var(--line);padding:30px 24px;
+  transition:border-color .3s,transform .3s;
+}
+.tuner:hover{border-color:var(--redline);transform:translateY(-4px)}
+.tuner-name{
+  font-family:var(--display);font-weight:600;font-size:22px;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.tuner-loc{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.12em;margin-bottom:18px}
+.tuner-desc{font-size:13px;line-height:1.55;color:var(--muted);font-weight:300}
+
+/* ---- closing ---- */
+.closing{text-align:center;padding:160px 44px}
+.closing h2{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(44px,8vw,120px);text-transform:uppercase;
+  line-height:.9;letter-spacing:-.01em;
+}
+.closing h2 em{color:var(--redline);font-style:normal}
+.closing p{
+  font-size:17px;color:var(--muted);max-width:480px;
+  margin:30px auto 44px;font-weight:300;line-height:1.6;
+}
+
+footer{
+  padding:44px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  letter-spacing:.1em;flex-wrap:wrap;gap:16px;
+}
+footer .redmark{color:var(--redline)}
+
+/* ---- reveal anim ---- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---- responsive ---- */
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding-top:120px;padding-bottom:60px;gap:50px;text-align:left}
+  .tach-wrap{order:-1}
+  .legends{grid-template-columns:1fr 1fr}
+  .split{grid-template-columns:1fr;gap:44px}
+  .tuners{grid-template-columns:1fr 1fr}
+  nav{padding:18px 24px}
+  .navlinks{display:none}
+}
+@media(max-width:560px){
+  section{padding:80px 22px}
+  .hero{padding-left:22px;padding-right:22px}
+  .legends{grid-template-columns:1fr}
+  .tuners{grid-template-columns:1fr}
+  .sec-head{flex-direction:column;gap:8px}
+  h1{font-size:clamp(48px,16vw,80px)}
+  footer{flex-direction:column;align-items:flex-start}
+  .rail-rpm{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="rail"><div class="rail-fill" id="railFill"></div></div>
+<div class="rail-rpm" id="railRpm">0 RPM</div>
+
+<nav>
+  <div class="brand">RED<span>·</span>LINE</div>
+  <ul class="navlinks">
+    <li><a href="#legends">Legends</a></li>
+    <li><a href="#ethos">Ethos</a></li>
+    <li><a href="#spec">The Engine</a></li>
+    <li><a href="#tuners">Tuners</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="scanlines"></div>
+  <div class="hero-copy">
+    <div class="eyebrow">Japanese Domestic Market · Est. Showa 50</div>
+    <h1>
+      <span class="fill">Built to</span>
+      <span class="stroke">chase the</span>
+      <em>redline</em>
+    </h1>
+    <p class="hero-sub">A reverence for the cars Japan built for itself — <strong>tuned past sense, balanced past belief.</strong> From the twin-turbo RB26 to the rotary scream of the 13B, this is the machinery the rest of the world fell in love with through a back window.</p>
+    <div class="cta-row">
+      <a href="#legends" class="btn">Meet the legends</a>
+      <a href="#ethos" class="btn btn-ghost">Why JDM</a>
+    </div>
+  </div>
+  <div class="tach-wrap">
+    <svg class="tach" id="tach" viewBox="0 0 400 400"></svg>
+    <div class="tach-readout">
+      <div class="tach-rpm"><span id="rpmVal">0</span><span class="x">×1000</span></div>
+      <div class="tach-label">Idle → Redline</div>
+    </div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>SKYLINE GT-R</span><span>RX-7</span><span>SUPRA</span><span>NSX</span><span>LANCER EVO</span><span>IMPREZA STI</span><span>AE86</span><span>SILVIA</span><span>NSX</span>
+    <span>SKYLINE GT-R</span><span>RX-7</span><span>SUPRA</span><span>NSX</span><span>LANCER EVO</span><span>IMPREZA STI</span><span>AE86</span><span>SILVIA</span><span>NSX</span>
+  </div>
+</div>
+
+<!-- LEGENDS -->
+<section id="legends">
+  <div class="sec-head reveal">
+    <div class="sec-num">2.0 <small>×1000 RPM</small></div>
+    <h2 class="sec-title">The <em>Legends</em></h2>
+  </div>
+  <div class="legends">
+    <div class="legend reveal" style="--carcolor:#3DD6D0">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">BNR34 <span class="legend-year">1999–2002</span></div>
+      <div class="legend-name">Skyline<br>GT-R</div>
+      <div class="legend-maker">Nissan · "Godzilla"</div>
+      <div class="legend-engine"><span>RB26DETT · 2.6L I6 TT</span><span>276 hp*</span></div>
+      <div class="legend-note">ATTESA all-wheel drive and a gentleman's-agreement horsepower figure nobody believed. The last analog GT-R.</div>
+    </div>
+    <div class="legend reveal" style="--carcolor:#FF1E2D">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">FD3S <span class="legend-year">1992–2002</span></div>
+      <div class="legend-name">RX-7</div>
+      <div class="legend-maker">Mazda · Rotary faith</div>
+      <div class="legend-engine"><span>13B-REW · 1.3L 2-rotor</span><span>276 hp*</span></div>
+      <div class="legend-note">Sequential twin turbos on a spinning Dorito. Featherweight, knife-edged, and gloriously thirsty for apex and oil alike.</div>
+    </div>
+    <div class="legend reveal" style="--carcolor:#FFB627">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">A80 <span class="legend-year">1993–2002</span></div>
+      <div class="legend-name">Supra</div>
+      <div class="legend-maker">Toyota · The 2JZ myth</div>
+      <div class="legend-engine"><span>2JZ-GTE · 3.0L I6 TT</span><span>276 hp*</span></div>
+      <div class="legend-note">A cast-iron block engineered for abuse. Stock internals shrug off four-figure power — the reason it became legend.</div>
+    </div>
+    <div class="legend reveal" style="--carcolor:#EDEDED">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">NA1 <span class="legend-year">1990–2005</span></div>
+      <div class="legend-name">NSX</div>
+      <div class="legend-maker">Honda · Everyday exotic</div>
+      <div class="legend-engine"><span>C30A · 3.0L V6 VTEC</span><span>270 hp</span></div>
+      <div class="legend-note">Tuned with Ayrton Senna at Suzuka. Proof a supercar could be reliable, usable, and humble enough to drive daily.</div>
+    </div>
+    <div class="legend reveal" style="--carcolor:#3DD6D0">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">AE86 <span class="legend-year">1983–1987</span></div>
+      <div class="legend-name">Corolla<br>Levin</div>
+      <div class="legend-maker">Toyota · "Hachiroku"</div>
+      <div class="legend-engine"><span>4A-GE · 1.6L I4</span><span>128 hp</span></div>
+      <div class="legend-note">Rear-drive, light, and cheap — the chassis that taught a generation to drift and started a motorsport religion.</div>
+    </div>
+    <div class="legend reveal" style="--carcolor:#FF1E2D">
+      <div class="legend-spark"></div>
+      <div class="legend-chassis">GC8 <span class="legend-year">1992–2000</span></div>
+      <div class="legend-name">Impreza<br>WRX STI</div>
+      <div class="legend-maker">Subaru · Rally-bred</div>
+      <div class="legend-engine"><span>EJ20 · 2.0L flat-4 turbo</span><span>276 hp*</span></div>
+      <div class="legend-note">Boxer rumble, symmetrical AWD, and a World Rally pedigree that turned a sedan into a gravel-slaying icon.</div>
+    </div>
+  </div>
+  <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:24px;letter-spacing:.05em">* 276 hp = the famed 280 PS "gentlemen's agreement" ceiling self-imposed by Japanese makers from 1989. Real figures, everyone knew, ran higher.</p>
+</section>
+
+<!-- ETHOS -->
+<section id="ethos">
+  <div class="sec-head reveal">
+    <div class="sec-num">4.5 <small>×1000 RPM</small></div>
+    <h2 class="sec-title">The <em>Ethos</em></h2>
+  </div>
+  <div class="split">
+    <div class="philtext reveal">
+      <p class="lead">JDM was never about the biggest number. It was about <em>the right number, delivered perfectly.</em></p>
+      <p>While others chased displacement, Japan chased precision. <strong>Balance over brute force.</strong> A 1.6-litre four that revs to the moon. A rotary that weighs nothing and screams. All-wheel-drive systems that read the road faster than the driver.</p>
+      <p>The culture grew in the touge — mountain passes run at night — and on the dragstrips of Yokohama. It crossed oceans through grey imports, video games, and a generation that learned these names before they could drive. <strong>Reliability was the radical idea:</strong> a car you could tune to twice its power and still trust on Monday morning.</p>
+      <p>That's the JDM contract. Engineering as devotion. The redline as the destination.</p>
+    </div>
+    <div class="specsheet reveal">
+      <div class="specsheet-head"><span>THE PHILOSOPHY, METERED</span><span>v.50</span></div>
+      <div class="specrow"><span class="k">Power ceiling (PS)</span><span class="v"><em>280</em> — self-imposed</span></div>
+      <div class="specrow"><span class="k">Preferred layout</span><span class="v">FR · AWD · MR</span></div>
+      <div class="specrow"><span class="k">Transmission of choice</span><span class="v">Manual, always</span></div>
+      <div class="specrow"><span class="k">Redline, typical</span><span class="v"><em>7,500–9,000</em> rpm</span></div>
+      <div class="specrow"><span class="k">Forced induction</span><span class="v">Turbo / rotary</span></div>
+      <div class="specrow"><span class="k">Tuning headroom</span><span class="v">Generous to insane</span></div>
+      <div class="specrow"><span class="k">Soul</span><span class="v"><em>Non-negotiable</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEC / ANATOMY -->
+<section id="spec">
+  <div class="sec-head reveal">
+    <div class="sec-num">6.8 <small>×1000 RPM</small></div>
+    <h2 class="sec-title">Anatomy of an <em>Icon</em></h2>
+  </div>
+  <div class="split" style="grid-template-columns:.9fr 1.1fr">
+    <div class="specsheet reveal">
+      <div class="specsheet-head"><span>RB26DETT · CASE STUDY</span><span>NISSAN</span></div>
+      <div class="specrow"><span class="k">Configuration</span><span class="v">Inline-6, twin-turbo</span></div>
+      <div class="specrow"><span class="k">Displacement</span><span class="v">2,568 cc</span></div>
+      <div class="specrow"><span class="k">Bore × stroke</span><span class="v">86.0 × 73.7 mm</span></div>
+      <div class="specrow"><span class="k">Turbos</span><span class="v">Twin ceramic / steel</span></div>
+      <div class="specrow"><span class="k">Block</span><span class="v"><em>Cast iron, over-built</em></span></div>
+      <div class="specrow"><span class="k">Stock output</span><span class="v">276 hp (claimed)</span></div>
+      <div class="specrow"><span class="k">Tuned potential</span><span class="v"><em>1,000+ hp</em></span></div>
+      <div class="specrow"><span class="k">Status</span><span class="v">Holy grail</span></div>
+    </div>
+    <div class="philtext reveal">
+      <p class="lead">Why does one engine become <em>scripture?</em></p>
+      <p>The RB26 was designed for Group A racing — and the engineers built in margins that road cars never needed. <strong>The block was strong enough for triple its rated power.</strong> The straight-six layout breathed beautifully. The result was a foundation tuners could build skyscrapers on.</p>
+      <p>This is the JDM pattern repeated across makers: the 2JZ, the 13B, the EJ20, the 4G63. Engines engineered with such headroom that the aftermarket spent decades discovering their true limits — and rarely found them. <strong>Built for the track, gifted to the street.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- TUNERS -->
+<section id="tuners">
+  <div class="sec-head reveal">
+    <div class="sec-num">8.2 <small>×1000 RPM</small></div>
+    <h2 class="sec-title">The <em>Tuning</em> Houses</h2>
+  </div>
+  <div class="tuners">
+    <div class="tuner reveal">
+      <div class="tuner-name">Nismo</div>
+      <div class="tuner-loc">NISSAN · TSURUMI</div>
+      <div class="tuner-desc">Nissan's own motorsport arm. The Z-tune R34 — only 19 ever built — remains the definitive factory-blessed GT-R.</div>
+    </div>
+    <div class="tuner reveal">
+      <div class="tuner-name">Mugen</div>
+      <div class="tuner-loc">HONDA · ASAKA</div>
+      <div class="tuner-desc">Founded by the Honda family bloodline. Where Honda built reliability, Mugen extracted the last screaming RPM.</div>
+    </div>
+    <div class="tuner reveal">
+      <div class="tuner-name">HKS</div>
+      <div class="tuner-loc">FUJINOMIYA</div>
+      <div class="tuner-desc">The turbo titans. If a JDM engine made big boost, an HKS kit was likely the reason it survived the experience.</div>
+    </div>
+    <div class="tuner reveal">
+      <div class="tuner-name">Spoon</div>
+      <div class="tuner-loc">HONDA · SETAGAYA</div>
+      <div class="tuner-desc">Yellow-and-blue purists. Spoon chases balance and bonded engines over headline horsepower — the surgeon's approach.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing reveal">
+  <h2>Chase your<br>own <em>redline</em></h2>
+  <p>The agreement is broken, the legends are appreciating, and the scream of a 13B at 9,000 rpm still sounds like the future. Find yours before the import laws change again.</p>
+  <a href="#legends" class="btn">Back to the legends</a>
+</div>
+
+<footer>
+  <div>RED<span class="redmark">·</span>LINE — A JDM REVERENCE</div>
+  <div>BUILT FOR ENTHUSIASTS · NOT AFFILIATED WITH ANY MANUFACTURER</div>
+  <div class="redmark">280 PS // ∞ SOUL</div>
+</footer>
+
+<script>
+/* ---------- TACHOMETER ---------- */
+const NS="http://www.w3.org/2000/svg";
+const tach=document.getElementById("tach");
+const cx=200,cy=200,R=170;
+const startA=135, endA=405;           // sweep 270°
+const maxRpm=9, redStart=7.5;
+function pol(a,r){const rad=(a-90)*Math.PI/180;return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
+function arc(a0,a1,r){
+  const[x0,y0]=pol(a0,r),[x1,y1]=pol(a1,r);
+  const large=(a1-a0)>180?1:0;
+  return `M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1}`;
+}
+// outer track
+let p=document.createElementNS(NS,"path");
+p.setAttribute("d",arc(startA,endA,R));
+p.setAttribute("stroke","rgba(255,255,255,0.08)");
+p.setAttribute("stroke-width","2");p.setAttribute("fill","none");
+tach.appendChild(p);
+// redline zone
+const redA0=startA+(redStart/maxRpm)*(endA-startA);
+let rp=document.createElementNS(NS,"path");
+rp.setAttribute("d",arc(redA0,endA,R));
+rp.setAttribute("stroke","#FF1E2D");rp.setAttribute("stroke-width","4");
+rp.setAttribute("fill","none");rp.setAttribute("opacity","0.9");
+tach.appendChild(rp);
+// ticks + numbers
+for(let i=0;i<=maxRpm;i++){
+  const a=startA+(i/maxRpm)*(endA-startA);
+  const major=true;
+  const[x0,y0]=pol(a,R-2),[x1,y1]=pol(a,R-16);
+  const t=document.createElementNS(NS,"line");
+  t.setAttribute("x1",x0);t.setAttribute("y1",y0);
+  t.setAttribute("x2",x1);t.setAttribute("y2",y1);
+  t.setAttribute("stroke",i>=redStart?"#FF1E2D":"rgba(255,255,255,0.5)");
+  t.setAttribute("stroke-width","2");
+  tach.appendChild(t);
+  const[lx,ly]=pol(a,R-36);
+  const txt=document.createElementNS(NS,"text");
+  txt.setAttribute("x",lx);txt.setAttribute("y",ly+5);
+  txt.setAttribute("text-anchor","middle");
+  txt.setAttribute("fill",i>=redStart?"#FF1E2D":"#7A7A82");
+  txt.setAttribute("font-family","'JetBrains Mono',monospace");
+  txt.setAttribute("font-size","16");txt.setAttribute("font-weight","700");
+  txt.textContent=i;
+  tach.appendChild(txt);
+  // minor ticks
+  if(i<maxRpm){
+    for(let j=1;j<5;j++){
+      const am=startA+((i+j/5)/maxRpm)*(endA-startA);
+      const[mx0,my0]=pol(am,R-2),[mx1,my1]=pol(am,R-9);
+      const mt=document.createElementNS(NS,"line");
+      mt.setAttribute("x1",mx0);mt.setAttribute("y1",my0);
+      mt.setAttribute("x2",mx1);mt.setAttribute("y2",my1);
+      mt.setAttribute("stroke","rgba(255,255,255,0.2)");
+      mt.setAttribute("stroke-width","1");
+      tach.appendChild(mt);
+    }
+  }
+}
+// needle
+const needle=document.createElementNS(NS,"line");
+needle.setAttribute("x1",cx);needle.setAttribute("y1",cy);
+needle.setAttribute("stroke","#FF1E2D");needle.setAttribute("stroke-width","3");
+needle.setAttribute("stroke-linecap","round");
+needle.setAttribute("filter","drop-shadow(0 0 6px #FF1E2D)");
+tach.appendChild(needle);
+const hub=document.createElementNS(NS,"circle");
+hub.setAttribute("cx",cx);hub.setAttribute("cy",cy);hub.setAttribute("r","10");
+hub.setAttribute("fill","#101015");hub.setAttribute("stroke","#FF1E2D");hub.setAttribute("stroke-width","2");
+tach.appendChild(hub);
+
+const rpmVal=document.getElementById("rpmVal");
+function setNeedle(rpm){
+  const a=startA+(rpm/maxRpm)*(endA-startA);
+  const[nx,ny]=pol(a,R-30);
+  needle.setAttribute("x2",nx);needle.setAttribute("y2",ny);
+  rpmVal.textContent=rpm.toFixed(1);
+}
+// startup sweep then settle to idle bounce
+let mediaReduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sweep(){
+  if(mediaReduce){setNeedle(0.9);return;}
+  let t=0;const dur=1600;const t0=performance.now();
+  function frame(now){
+    t=(now-t0)/dur;
+    if(t>=1){
+      // settle into a gentle idle bounce
+      const idle=0.9+Math.sin(now/240)*0.18;
+      setNeedle(Math.max(0,idle));
+      requestAnimationFrame(frame);
+      return;
+    }
+    // ease out to redline then back
+    const e=t<0.5? (t*2):(1-(t-0.5)*2);
+    const eased=1-Math.pow(1-e,3);
+    setNeedle(eased*maxRpm);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+sweep();
+
+/* ---------- SCROLL RAIL = RPM ---------- */
+const railFill=document.getElementById("railFill");
+const railRpm=document.getElementById("railRpm");
+function onScroll(){
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=Math.min(1,Math.max(0,window.scrollY/h));
+  railFill.style.height=(pct*100)+"%";
+  const rpm=Math.round(pct*9000);
+  railRpm.textContent=rpm.toLocaleString()+" RPM";
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+/* ---------- REVEAL ---------- */
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+},{threshold:0.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
